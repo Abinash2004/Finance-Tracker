@@ -1,12 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_tracker/Elements/functions.dart';
 import 'package:finance_tracker/Elements/widgets.dart';
-import 'package:finance_tracker/Account/Login/otp_screen.dart';
+import 'package:finance_tracker/Account/Login/code_screen.dart';
 import 'package:finance_tracker/main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+  static String loginEmail = "";
   static bool isUserExist = false;
 
   @override
@@ -16,6 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   final phoneNumber = TextEditingController();
+  final email = TextEditingController();
   bool isLoading = false;
   String error = '';
 
@@ -26,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: accentColor1,
-        title: loginTitleText('INFINITY ACADEMY'),
+        title: loginTitleText('FINANCE TRACKER'),
       ),
 
       body: Padding(
@@ -39,10 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
             headingText(selectSubHeading(),false),
             const SizedBox(height: 20),
       
-            phoneTextFormField(phoneNumber),
+            emailTextFormField(email),
             const SizedBox(height: 10),
-      
-            Text(error,style: const TextStyle(color: Colors.redAccent,fontSize: 15)),
+
+            (error.isEmpty) ? const SizedBox() : Text(error,style: const TextStyle(color: Colors.redAccent,fontSize: 15)),
             const SizedBox(height: 10),
             
             SizedBox(
@@ -50,52 +51,32 @@ class _LoginScreenState extends State<LoginScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  setState(() {});
-                  await userCheck(phoneNumber.text);
+                  setState(() {isLoading = true;});
+                  String modifiedEmail = email.text.replaceFirst(RegExp(r'\.[^.]*$'), '');
+                  await userCheck(modifiedEmail);
                   setState(() {error = '';});
 
-                  if(phoneNumber.text.isEmpty) {
-                    setState(() {error = 'Phone Number is Required';});
-                  } 
-                  else if(phoneNumber.text.length != 10) {
-                    setState(() {error = 'Invalid Phone Number';});
+                  if(email.text.isEmpty) {
+                    setState(() {
+                      error = 'Email is Required';
+                      isLoading = false;
+                    });
                   } 
                   else if(!LoginScreen.isUserExist) {
-                    setState(() {error = 'This number is not verified as ${MyApp.user}';});
+                    setState(() {
+                      error = 'This email is not verified as ${MyApp.user}';
+                      isLoading = false;
+                    });
                   } 
                   else {
-                    setState(() {isLoading = true;});
-                    MyApp.phoneNumber = phoneNumber.text;
-
-                    await FirebaseAuth.instance.verifyPhoneNumber(
-                      phoneNumber: '+91${MyApp.phoneNumber}',
-
-                      verificationCompleted: (PhoneAuthCredential credential) {},
-
-                      verificationFailed: (FirebaseAuthException e) {
-                        setState(() {isLoading = false;});
-                        if(e.message == 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.') {
-                          setState(() {error = 'Network Problem';});
-                        } 
-                        else {
-                          setState(() {error = 'Invalid Phone Number';});
-                        }
-                      },
-
-                      codeSent: (String verificationId, int? resendToken) {
-                        OtpScreen.verify = verificationId;
-                        setState(() {isLoading = false;});
-                        Navigator.push(context,MaterialPageRoute(builder: (context) => const OtpScreen()));
-                      },
-                      
-                      codeAutoRetrievalTimeout: (String verificationId) {
-                        isLoading ? setState(() {isLoading = false;}) : null; 
-                      },
-                    );
+                    MyApp.email = email.text;
+                    LoginScreen.loginEmail = email.text;
+                    setState(() {isLoading = false;});
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => const OtpScreen()));
                   }
                 },
                 style: buttonStyle(),
-                child: isLoading ? const SizedBox( height: 25, width: 25, child: CircularProgressIndicator.adaptive(strokeWidth: 3,valueColor: AlwaysStoppedAnimation<Color>(Colors.white70))) : buttonText('Send OTP'),
+                child: isLoading ? const SizedBox( height: 25, width: 25, child: CircularProgressIndicator.adaptive(strokeWidth: 3,valueColor: AlwaysStoppedAnimation<Color>(Colors.white70))) : buttonText('Proceed'),
               ),
             ),
             const SizedBox(height: 10),

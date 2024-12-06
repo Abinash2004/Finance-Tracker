@@ -16,8 +16,11 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   
   static String user = 'Student';
+  static String email = '';
+  static String name = '';
   static String phoneNumber = '';
-  static String picture = '';
+  static String joiningDate = '';
+  static String grade = '';
 
   @override
   Widget build(BuildContext context) {

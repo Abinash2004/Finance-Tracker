@@ -1,14 +1,16 @@
+import 'package:finance_tracker/Account/Login/login_screen.dart';
+import 'package:finance_tracker/Elements/functions.dart';
+import 'package:finance_tracker/main.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_tracker/Elements/widgets.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
-  static String localFile = '';
-  static bool isLocal=false;
   static bool isLogOut = false;
 
   static String user = '';
   static String name = '';
+  static String email = '';
   static String phoneNumber = '';
   static String joiningDate = '';
   static String std = '';
@@ -31,10 +33,6 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Column(
           children: [
       
-            profilePicture(),
-            SizedBox(height: screen.height*0.025),
-      
-      
             accountName(AccountScreen.name),
             SizedBox(height: screen.height*0.05),
       
@@ -47,6 +45,9 @@ class _AccountScreenState extends State<AccountScreen> {
             accountDetails('Academic Post :\t\t\t${AccountScreen.user}'),
             SizedBox(height: screen.height*0.025),
       
+            accountDetails('Email : \t\t\t${AccountScreen.email}'),
+            SizedBox(height: screen.height*0.025),
+
             accountDetails('Phone Number : \t\t\t+91 ${AccountScreen.phoneNumber}'),
             SizedBox(height: screen.height*0.025),
 
@@ -54,7 +55,21 @@ class _AccountScreenState extends State<AccountScreen> {
             SizedBox(height: screen.height*0.025),
             
             (AccountScreen.std.isNotEmpty) ? accountDetails('Class : \t\t\t${AccountScreen.std}') : const Text(''),
-            SizedBox(height: screen.height*0.025),      
+            SizedBox(height: screen.height*0.025),
+
+            (MyApp.email == AccountScreen.email) ? SizedBox(
+              height: 45,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                    logoutAccount(context);
+                    Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => const LoginScreen()),(route) => false);
+
+                },
+                style: buttonStyle(),
+                child: buttonText('Log Out'),
+              ),
+            ) : const SizedBox(),      
           ],
         ),
       ),

@@ -7,7 +7,6 @@ import 'package:finance_tracker/Add%20Members/add_teacher.dart';
 import 'package:finance_tracker/Elements/functions.dart';
 import 'package:finance_tracker/Monthly%20Collection/fees_collection.dart';
 import 'package:finance_tracker/Monthly%20Collection/salary_collection.dart';
-import 'package:finance_tracker/home_screen.dart';
 import 'package:finance_tracker/main.dart';
 import 'package:finance_tracker/member_list.dart';
 import 'package:finance_tracker/Payment/payment.dart';
@@ -45,7 +44,7 @@ Widget buttonText(String text) {
 // Style for Button in login screen
 ButtonStyle buttonStyle() {
   return ButtonStyle(
-    backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => states.contains(MaterialState.pressed) ? null : accentColor1),
+    backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => states.contains(WidgetState.pressed) ? null : accentColor1),
   );
 }
 
@@ -82,7 +81,7 @@ Widget headingText(String text, bool isheading) {
 }
 
 // Phone Number text field in login screen 
-Widget phoneTextFormField(var phoneNumber) {
+Widget emailTextFormField(var email) {
 
   var defaultBorder = const OutlineInputBorder(
         borderSide: BorderSide(style: BorderStyle.solid, width: 0),
@@ -91,19 +90,19 @@ Widget phoneTextFormField(var phoneNumber) {
 
   return TextField(
 
-    controller: phoneNumber,
-    keyboardType: TextInputType.phone,
+    controller: email,
+    keyboardType: TextInputType.emailAddress,
     cursorColor: accentColor2,
-    style: textStyle(Colors.white70, 22, FontWeight.w400, 10, 0.25),
+    style: textStyle(Colors.white70, 20, FontWeight.w400, 0, 0),
 
     decoration: InputDecoration(
       
       contentPadding: const EdgeInsets.only(top: 15, bottom: 15, left: 20),
       filled: true,
       fillColor: const Color.fromARGB(255, 50, 50, 50),
-      prefixIcon: const Icon(Icons.phone, color: Colors.white54),
+      prefixIcon: const Icon(Icons.mail_rounded, color: Colors.white54),
       
-      labelText: 'Phone Number',
+      labelText: 'Email',
       labelStyle: textStyle(Colors.white54, 20, FontWeight.w500, 0.5, 0.25),
       floatingLabelStyle: textStyle(accentColor2, 23, FontWeight.w500, 0.3, 0.25),
       enabledBorder: defaultBorder,
@@ -158,7 +157,7 @@ Widget appBarTitleText(String text) {
   return Align(
     alignment: Alignment.centerLeft,
     child: Text(text,
-      style: textStyle(Colors.white, 17, FontWeight.w500, 2, 1),
+      style: textStyle(Colors.white, 17, FontWeight.w500, 1.5, 0),
     ),
   );
 }
@@ -181,12 +180,12 @@ AppBar homeScreenAppBar(String name, var context){
         padding: const EdgeInsets.all(10),
         child: IconButton(
           onPressed: () {
-            AccountScreen.picture = MyApp.picture;
             AccountScreen.user = MyApp.user;
-            AccountScreen.name = HomeScreen.name;
+            AccountScreen.name = MyApp.name;
+            AccountScreen.email = MyApp.email;
             AccountScreen.phoneNumber = MyApp.phoneNumber;
-            AccountScreen.joiningDate = HomeScreen.joiningDate;
-            AccountScreen.std = HomeScreen.std;
+            AccountScreen.joiningDate = MyApp.joiningDate;
+            AccountScreen.std = MyApp.grade;
             AccountScreen.isLogOut = true;
             Navigator.push(context,MaterialPageRoute(builder:(context) => const AccountScreen()));
           },
@@ -207,14 +206,14 @@ Widget homeScreenHeading(String text)  {
 // Monthly Collection Widget 
 Widget monthlyCollectionBox(var screen,String text, var context) {
   return SizedBox(
-    height: screen.width*0.5,
+    height: screen.width*0.45,
     width: screen.width*0.425,
     child: ElevatedButton(
       style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25)
         )),
-        backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => widgetColor),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => widgetColor),
       ),
       onPressed: () {
         if(text == 'Salary') {
@@ -225,7 +224,7 @@ Widget monthlyCollectionBox(var screen,String text, var context) {
         }
       },
       child: Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 7.5),
         child: Column(
           children: [
             Align(
@@ -237,7 +236,8 @@ Widget monthlyCollectionBox(var screen,String text, var context) {
             SizedBox(height: screen.height*0.022),
             const Icon(Icons.currency_rupee_rounded,size: 50,color: Color.fromARGB(255, 0, 130, 150)),
             SizedBox(height: screen.height*0.022),
-            Text('Monthly Collection',style: textStyle(Colors.white70, 12.5, FontWeight.w300, 0.5, 0)),
+            Align(
+              alignment: Alignment.bottomLeft,child: Text('Monthly',style: textStyle(Colors.white70, 15, FontWeight.w300, 0.5, 0))),
           ],
         ),
       )
@@ -252,10 +252,10 @@ Widget memberListContainer(var screen,String text, var context) {
     width: double.infinity,
     child: ElevatedButton(
       style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
         )),
-        backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => widgetColor),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => widgetColor),
       ),
       onPressed: () {
         if(text == 'Admin Information') {
@@ -293,10 +293,10 @@ Widget addTeacherStudentContainer(context,screen, text) {
     width: screen.width*0.425,
     child: ElevatedButton(
       style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
         )),
-        backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => widgetColor),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => widgetColor),
       ),
       onPressed: () {
         if(text == 'Teacher') {
@@ -329,10 +329,10 @@ Widget paymentHistoryContainer(var screen,String text, var context) {
     width: double.infinity,
     child: ElevatedButton(
       style: ButtonStyle(
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
         )),
-        backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => widgetColor),
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => widgetColor),
       ),
       onPressed: () {
         PaymentHistory.phoneNumber = MyApp.phoneNumber;
@@ -373,44 +373,10 @@ AppBar accountScreenAppBar(context) {
       Navigator.pop(context);
       }, icon: const Icon(Icons.arrow_back,color: Colors.white)),
     title: appBarTitleText('Account Information'),
-    actions: [
-      AccountScreen.isLogOut ? IconButton(
-        padding: const EdgeInsets.all(20),
-        onPressed: () {
-          logoutAccount(context);
-        },
-        icon: const Icon(Icons.logout,color: Colors.white),
-      ): const Text(''),
-    ],
   );
 }
 
 
-// Profile Picture Widget
-Widget profilePicture() {
-  return Container(
-    height: 150, width: 150,
-    decoration: BoxDecoration(
-      color: widgetColor,
-      border: Border.all(color: accentColor2,width: 5),
-      borderRadius: BorderRadius.circular(100),
-    ),
-    child: (AccountScreen.picture.isNotEmpty || AccountScreen.isLocal) ? 
-    ClipRRect(
-      borderRadius: BorderRadius.circular(100),
-      child: AccountScreen.isLocal ? 
-      Image.file(File(AccountScreen.localFile),
-        height: 100.0, width: 100.0,
-        fit: BoxFit.cover,
-      ) :
-      Image.network(AccountScreen.picture,
-        height: 100.0, width: 100.0,
-        fit: BoxFit.cover,
-      ),
-    ) : 
-    const Icon(Icons.person,size: 125),
-  );
-}
 
 //Account Name widget 
 Widget accountName(text) {
@@ -434,25 +400,6 @@ Widget accountDetails(String text) {
 //---------Add Member Screen Widgets-------------
 //-----------------------------------------------
 
-Widget addProfilePicture(bool isTeacher) {
-  return Container(
-    height: 150, width: 150,
-    decoration: BoxDecoration(
-      color: widgetColor,
-      border: Border.all(color: accentColor2,width: 5),
-      borderRadius: BorderRadius.circular(100),
-    ),
-    child: (isTeacher ? AddTeacherScreen.localFile.isNotEmpty : AddStudentScreen.localFile.isNotEmpty) ? 
-    ClipRRect(
-      borderRadius: BorderRadius.circular(100),
-      child: Image.file(File(isTeacher ? AddTeacherScreen.localFile : AddStudentScreen.localFile),
-        height: 100.0, width: 100.0,
-        fit: BoxFit.cover,
-      ),
-    ) : 
-    const Icon(Icons.person,size: 125),
-  );
-}
 
 Widget addTextFormField(var text,var controller, var icon, bool isName) {
 
@@ -494,7 +441,7 @@ Widget addTextFormField(var text,var controller, var icon, bool isName) {
   );
 }
 
-AlertDialog memberAddedBox(var context, var name, var phone) {
+AlertDialog memberAddedBox(var context, var name, var phone, var email) {
   return AlertDialog(
     backgroundColor: widgetColor,
     title: Column(
@@ -507,6 +454,7 @@ AlertDialog memberAddedBox(var context, var name, var phone) {
           onPressed: () { 
               name = TextEditingController(text: '');
               phone = TextEditingController(text: '');
+              email = TextEditingController(text: '');
             Navigator.pop(context);
           },
           child: buttonText('OK'),
@@ -536,11 +484,11 @@ Widget memberListSubTitle(String text) {
 }
 
 //Icon Button for Operation of Member Details
-Widget memberListIconButton(var context, var screen, var icon, var databaseRef, String name, String phoneNumber, String joiningDate, String std,String task) {
+Widget memberListIconButton(var context, var screen, var icon, var databaseRef, String name, String phoneNumber, String email, String joiningDate, String std,String task) {
   return IconButton(
     onPressed: () async {
       if (task == 'Delete') {
-        await deletAccount(context, screen, databaseRef, name, phoneNumber);
+        await deletAccount(context, screen, databaseRef, name, email);
       }
 
       else if (task == 'Payment History') {
@@ -560,6 +508,7 @@ Widget memberListIconButton(var context, var screen, var icon, var databaseRef, 
       else if(task == 'Edit Account') {
         EditAccountScreen.editUser = MemberList.user;
         EditAccountScreen.name = name;
+        EditAccountScreen.email = email;
         EditAccountScreen.phoneNumber = phoneNumber;
         (MemberList.user != 'Admin') ? EditAccountScreen.joiningDate = joiningDate : null;
         EditAccountScreen.std = std;

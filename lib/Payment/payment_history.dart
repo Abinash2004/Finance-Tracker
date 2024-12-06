@@ -32,7 +32,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
           (MyApp.user == 'Admin' && PaymentHistory.user == 'Student') ? Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Container(
-              height: screen.height*0.175,
+              height: screen.height*0.14,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: widgetColor,
@@ -42,49 +42,10 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text('Send Remainder : ',
-                            style: textStyle(Colors.white70, 20, FontWeight.w500, 1, 0.25),
-                          ),
-                        ),
-                        SizedBox(width: screen.width*0.1),
-                        ElevatedButton(
-                            style: buttonStyle(),
-                            onPressed: () {
-                              showDialog(context: context, builder: (context) {
-                                  return AlertDialog(
-                                    backgroundColor: widgetColor,
-                                    title: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        addTextFormField('Amount', amount, const Icon(Icons.currency_rupee_rounded,color: accentColor2,), false),
-                                        const SizedBox(height: 20),
-                                        ElevatedButton(
-                                          style: buttonStyle(),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: buttonText('Send')
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                });
-                            },
-                            child: buttonText('Send')
-                          ),
-                      ],
-                    ),
+                    
+                    accountDetails('Name:\t\t\t\t\t${PaymentHistory.name}'),  
                     SizedBox(height: screen.height*0.025),
-                    Row(
-                      children: [
-                        accountDetails('Joining Date:\t\t\t\t\t${PaymentHistory.joiningDate}')  
-                      ],
-                    ),
+                    accountDetails('Joining Date:\t\t\t\t\t${PaymentHistory.joiningDate}')  
                   ],
                 ),
               ),

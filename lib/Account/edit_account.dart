@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:finance_tracker/Elements/widgets.dart';
 
 class EditAccountScreen extends StatefulWidget {
@@ -11,6 +10,7 @@ class EditAccountScreen extends StatefulWidget {
   static String localFile = '';
   static String picture = '';
   static String name = '';
+  static String email = '';
   static String phoneNumber = '';
   static String joiningDate = '';
   static String std = '';
@@ -53,36 +53,6 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
-        
-                Stack(
-                  children: [
-                    editProfilePicture(),
-                    Positioned(
-                      bottom: 5,
-                      right: 5,
-                      child: Container(
-                        height: 40, width: 40,
-                        decoration: BoxDecoration(
-                          color: widgetColor,
-                          border: Border.all(color: accentColor2,width: 2.5),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: IconButton(
-                          onPressed: () async {
-                            XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                            setState(() {
-                              EditAccountScreen.localFile = image!.path.toString();
-                              if(EditAccountScreen.localFile.isNotEmpty) {
-                                EditAccountScreen.isLocal = true;
-                              }
-                            }); 
-                          },
-                          icon: const Icon(Icons.edit,size: 20),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
         
                 SizedBox(height: screen.height*0.025),
                 (EditAccountScreen.editUser != 'Admin') ? addTextFormField('Name',name,const Icon(Icons.person, color: Colors.white54),true) : const SizedBox(),
@@ -141,18 +111,21 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                         try {
                           setState(() {isLoading = true;});
                           final databaseRef = FirebaseDatabase.instance.ref();
-                          databaseRef.child('User').child(EditAccountScreen.editUser).child(EditAccountScreen.phoneNumber).set(
+                          databaseRef.child('User').child(EditAccountScreen.editUser).child(EditAccountScreen.email.replaceFirst(RegExp(r'\.[^.]*$'), '')).set(
                             (EditAccountScreen.editUser == 'Admin') ? {
                               'Name' : EditAccountScreen.name,
+                              'Email' : EditAccountScreen.email,
                               'Phone Number' : EditAccountScreen.phoneNumber
                             } :
                             (EditAccountScreen.editUser == 'Teacher') ? {
                               'Name' : name.text,
+                              'Email' : EditAccountScreen.email,
                               'Joining Date' : joiningDate.text,
                               'Phone Number' : EditAccountScreen.phoneNumber
                             } :
                             (EditAccountScreen.editUser == 'Student') ? {
                               'Name' : name.text,
+                              'Email' : EditAccountScreen.email,
                               'Joining Date' : EditAccountScreen.joiningDate,
                               'Phone Number' : EditAccountScreen.phoneNumber,
                               'Class' : std

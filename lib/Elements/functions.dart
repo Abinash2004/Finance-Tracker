@@ -3,7 +3,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_tracker/Elements/widgets.dart';
 import 'package:finance_tracker/Account/Login/login_screen.dart';
-import 'package:finance_tracker/home_screen.dart';
 import 'package:finance_tracker/main.dart';
 import 'package:finance_tracker/Payment/payment.dart';
 
@@ -12,10 +11,10 @@ import 'package:finance_tracker/Payment/payment.dart';
 //------------------------------------------------
 
 // Checks weather user exist or not
-Future<void> userCheck(String phoneNumber) async {
+Future<void> userCheck(String email) async {
   final ref = FirebaseDatabase.instance.ref();
     var snapshot = await ref.child('User').child(MyApp.user).get();
-    if (snapshot.hasChild(phoneNumber)) {
+    if (snapshot.hasChild(email)) {
       LoginScreen.isUserExist = true;
       return;
     } 
@@ -29,21 +28,23 @@ Future<void> checkCurrentUser() async {
   final user = FirebaseAuth.instance.currentUser;
 
   if(user != null) {
-    MyApp.phoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber!.toString().substring(3);
+
+    MyApp.email = FirebaseAuth.instance.currentUser!.email!.toString().replaceFirst(RegExp(r'\.[^.]*$'), '');
+
     final auth = FirebaseDatabase.instance;
     final ref = auth.ref();
     var snapshot = await ref.child('User').child('Admin').get();
-    if (snapshot.hasChild(MyApp.phoneNumber)) {
+    if (snapshot.hasChild(MyApp.email)) {
       MyApp.user = 'Admin';
       return;
     }
     snapshot = await ref.child('User').child('Teacher').get();
-    if (snapshot.hasChild(MyApp.phoneNumber)) {
+    if (snapshot.hasChild(MyApp.email)) {
       MyApp.user = 'Teacher';
       return;
     }
     snapshot = await ref.child('User').child('Student').get();
-    if (snapshot.hasChild(MyApp.phoneNumber)) {
+    if (snapshot.hasChild(MyApp.email)) {
       MyApp.user = 'Student';
       return;
     }
@@ -53,13 +54,13 @@ Future<void> checkCurrentUser() async {
 // select the sub-heading for user for login screen
 String selectSubHeading() {
   if(MyApp.user == "Student") {
-    return 'Login through your issued mobile number !';
+    return 'Login through your issued email !';
   } 
   else if(MyApp.user == "Teacher") {
-    return 'Only tution faculty members are allowed !';
+    return 'Only faculty members are allowed !';
   } 
   else if(MyApp.user == "Admin") {
-    return 'Only administration members are allowed !';
+    return 'Only admin members are allowed !';
   }
   return '';
 }
@@ -122,19 +123,22 @@ void userSwitch(bool isleft) {
 Future<void> getUserInformation() async {
 
   final databaseRef = FirebaseDatabase.instance.ref();
-  var databaseSnapshot = await databaseRef.child('User').child(MyApp.user).child(MyApp.phoneNumber).get();
+  var databaseSnapshot = await databaseRef.child('User').child(MyApp.user).child(MyApp.email.replaceFirst(RegExp(r'\.[^.]*$'), '')).get();
   if(databaseSnapshot.value != null) {
     if(MyApp.user == 'Admin') {
-      HomeScreen.name = databaseSnapshot.child('Name').value.toString();
+      MyApp.name = databaseSnapshot.child('Name').value.toString();
+      MyApp.phoneNumber = databaseSnapshot.child('Phone Number').value.toString();
     }
     else if(MyApp.user == 'Teacher') {
-      HomeScreen.name = databaseSnapshot.child('Name').value.toString();
-      HomeScreen.joiningDate = databaseSnapshot.child('Joining Date').value.toString();
+      MyApp.name = databaseSnapshot.child('Name').value.toString();
+      MyApp.phoneNumber = databaseSnapshot.child('Phone Number').value.toString();
+      MyApp.joiningDate = databaseSnapshot.child('Joining Date').value.toString();
     }
     else if(MyApp.user == 'Student') {
-      HomeScreen.name = databaseSnapshot.child('Name').value.toString();
-      HomeScreen.joiningDate = databaseSnapshot.child('Joining Date').value.toString();
-      HomeScreen.std = databaseSnapshot.child('Class').value.toString();
+      MyApp.name = databaseSnapshot.child('Name').value.toString();
+      MyApp.phoneNumber = databaseSnapshot.child('Phone Number').value.toString();
+      MyApp.joiningDate = databaseSnapshot.child('Joining Date').value.toString();
+      MyApp.grade = databaseSnapshot.child('Class').value.toString();
     }
   }
 }
@@ -145,8 +149,7 @@ Future<void> getUserInformation() async {
 
 // Log Out Funciton
 void logoutAccount(context) {
-  HomeScreen.name = '';
-  MyApp.picture = '';
+  MyApp.name = '';
   MyApp.phoneNumber = '';
   FirebaseAuth.instance.signOut().then((value) => Navigator.push(context,MaterialPageRoute
   (builder: (context) => const LoginScreen())));
@@ -184,7 +187,7 @@ String? validateAmount(String? formDate) {
 //---------Member List Screen Functions----------
 //-----------------------------------------------
 
-Future<void> deletAccount(var context,var screen, var databaseRef, String name , String phoneNumber) async {
+Future<void> deletAccount(var context,var screen, var databaseRef, String name , String email) async {
   showDialog(context: context, builder: (context) {
     return AlertDialog(
       backgroundColor: widgetColor,
@@ -200,17 +203,17 @@ Future<void> deletAccount(var context,var screen, var databaseRef, String name ,
             children: [
               ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => states.contains(MaterialState.pressed) ? null : accentColor1),
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => states.contains(WidgetState.pressed) ? null : accentColor1),
                 ),
                 onPressed: () async {
-                  await databaseRef.child(phoneNumber).set(null).then((value) {Navigator.pop(context);});
+                  await databaseRef.child(email.replaceFirst(RegExp(r'\.[^.]*$'), '')).set(null).then((value) {Navigator.pop(context);});
                 },
                 child: Text('Yes',style: textStyle(Colors.white70, 17, FontWeight.w500, 1, 0.25)),
               ),
               SizedBox(width: screen.width*0.15),
               ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => states.contains(MaterialState.pressed) ? null : accentColor1),
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => states.contains(WidgetState.pressed) ? null : accentColor1),
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -240,7 +243,7 @@ Future<void> feesPayment(var context,var amount, String day, String month, Strin
       'Phone Number' : PaymentScreen.phoneNumber,
       'Amount' : amount.text,
       'Date' : '$day $month $year',
-      'By' : HomeScreen.name,
+      'By' : MyApp.name,
     });
     showDialog(context: context, builder: (context) {
       return AlertDialog(
@@ -275,7 +278,7 @@ Future<void> salaryPayment(var context,var amount, String day, String month, Str
       'Phone Number' : PaymentScreen.phoneNumber,
       'Amount' : amount.text,
       'Date' : '$day $month $year',
-      'By' : HomeScreen.name,
+      'By' : MyApp.name,
     });
     showDialog(context: context, builder: (context) {
       return AlertDialog(

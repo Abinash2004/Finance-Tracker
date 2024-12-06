@@ -32,7 +32,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     final screen = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: paymentScreenAppBar(context,'Fill Payment Information'),
+      appBar: paymentScreenAppBar(context,'Payment'),
       body: Padding(
             padding: const EdgeInsets.all(20),
             child: Form(
@@ -130,6 +130,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           else if(MemberList.user == 'Teacher') {
                             await salaryPayment(context, amount, day, month, year).then((value) {});
                           }
+                          setState(() {isLoading = false;});
                         }
                       },
                       child: isLoading ? const SizedBox( height: 25, width: 25, child: CircularProgressIndicator.adaptive(strokeWidth: 3,valueColor: AlwaysStoppedAnimation<Color>(Colors.white70))) :

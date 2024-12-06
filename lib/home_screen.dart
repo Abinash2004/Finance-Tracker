@@ -5,9 +5,6 @@ import 'package:finance_tracker/main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-  static String name = '';
-  static String joiningDate = '';
-  static String std = '';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -29,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
 
       backgroundColor: Colors.black,
-      appBar: homeScreenAppBar(HomeScreen.name, context),
+      appBar: homeScreenAppBar(MyApp.name, context),
       body: Padding(
 
         padding: EdgeInsets.only(

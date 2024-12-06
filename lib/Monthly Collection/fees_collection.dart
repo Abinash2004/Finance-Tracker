@@ -19,7 +19,7 @@ class _FeesCollectionState extends State<FeesCollection> {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
-    List<String> admin = ['Admin-1','Admin-2','Both Admin'];
+    // List<String> admin = ['Admin-1','Admin-2','Both Admin'];
     List<String> stds = ['1','2','3','4','5','6','7','8','9','10','11','12','All'];
     List<String> months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     final databaseRef = FirebaseDatabase.instance.ref('Payment').child('Fees');
@@ -35,7 +35,7 @@ class _FeesCollectionState extends State<FeesCollection> {
         children: [
           SizedBox(height: screen.height*0.015),
           Container(
-            height: screen.width*0.525,
+            height: screen.width*0.4,
             width: double.infinity,
             decoration: BoxDecoration(
               color: widgetColor,
@@ -133,34 +133,6 @@ class _FeesCollectionState extends State<FeesCollection> {
                       )
                     ],
                   ),
-                  SizedBox(height: screen.height*0.015),
-                  Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text('Admin : ',
-                          style: textStyle(Colors.white70, 20, FontWeight.w500, 1, 0.25),
-                        ),
-                      ),
-                      SizedBox(width: screen.width*0.05),
-                      DropdownButton<String>(
-                        value: user,
-                        items: [
-                          for(int i = 0; i < 3; i++)
-                          DropdownMenuItem<String>(
-                            value: admin[i],
-                            child: Text(admin[i],style: textStyle(Colors.white70, 17, FontWeight.w500, 1, 0.25))),
-                        ], 
-                        onChanged:(String? newValue) {
-                          setState(() {
-                            user = newValue!;collection = 0;
-                          });
-                        }, 
-                      ),
-                      SizedBox(width: screen.width*0.1),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -186,7 +158,7 @@ class _FeesCollectionState extends State<FeesCollection> {
                   return ListView.builder(
                     itemCount: snapshot.data!.snapshot.children.length,
                     itemBuilder: (context,index) {
-                      if(list[index]['Date'].contains(month) && list[index]['Date'].contains(year) && (std != 'All' ? list[index]['Class'] == std : true) && (user != 'Both Admin' ? list[index]['By'] == user : true)){
+                      if(list[index]['Date'].contains(month) && list[index]['Date'].contains(year) && (std != 'All' ? list[index]['Class'] == std : true)){
                         collection = collection + int.parse(list[index]['Amount']);
                         isExist = true;
                       } 
