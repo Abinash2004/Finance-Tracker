@@ -94,7 +94,7 @@ class _MemberListState extends State<MemberList> {
                           Navigator.push(context,MaterialPageRoute(builder: (context) => const AccountScreen()));
                         },
                         
-                        onLongPress: (MyApp.user == 'Admin') ? () {
+                        onLongPress: (MyApp.user == 'Admin' && MemberList.user != "Admin") ? () {
                           showModalBottomSheet(
                             context: context,
                             backgroundColor: widgetColor,
@@ -149,8 +149,8 @@ class _MemberListState extends State<MemberList> {
                                         ),
                                       ],
                                     ),
-                                ),
-                              );
+                                  ),
+                                );
                             }
                           );
                         }: null,
