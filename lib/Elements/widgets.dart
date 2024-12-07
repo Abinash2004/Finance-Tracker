@@ -576,6 +576,8 @@ AlertDialog memberEditedBox(var context, var name) {
             EditAccountScreen.picture = '';
             EditAccountScreen.localFile = '';
             Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
           child: buttonText('OK'),
         ),

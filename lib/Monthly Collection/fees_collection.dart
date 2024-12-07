@@ -70,7 +70,7 @@ class _FeesCollectionState extends State<FeesCollection> {
                     DropdownButton<String>(
                       value: year,
                       items: [
-                        for(int i = 2020; i <= DateTime.now().year.toInt(); i++)
+                        for(int i = 2021; i <= DateTime.now().year.toInt(); i++)
                         DropdownMenuItem<String>(value: i.toString(),child: Text(i.toString(),style: textStyle(Colors.white70, 17, FontWeight.w500, 1, 0.25))),
                               ], 
                         onChanged:(String? newValue) {

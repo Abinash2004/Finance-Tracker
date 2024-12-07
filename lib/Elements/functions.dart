@@ -257,6 +257,8 @@ Future<void> feesPayment(var context,var amount, String day, String month, Strin
               onPressed: () {
                 amount = TextEditingController(text: '');
                 Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
               child: const Text('OK',style: TextStyle(color: Colors.white,fontSize: 17.5)),
             ),
@@ -291,6 +293,8 @@ Future<void> salaryPayment(var context,var amount, String day, String month, Str
               style: buttonStyle(),
               onPressed: () {
                 amount = TextEditingController(text: '');
+                Navigator.pop(context);
+                Navigator.pop(context);
                 Navigator.pop(context);
               },
               child: const Text('OK',style: TextStyle(color: Colors.white,fontSize: 17.5)),
